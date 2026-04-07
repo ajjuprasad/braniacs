@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Brainiacs: The Ultimate Trivia App</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Splash Screen -->
+        <div id="splash-screen" class="screen active">
+            <div class="splash-content">
+                <div class="atom-logo">
+                    <div class="nucleus"></div>
+                    <div class="orbit orbit-1"><div class="electron"></div></div>
+                    <div class="orbit orbit-2"><div class="electron"></div></div>
+                    <div class="orbit orbit-3"><div class="electron"></div></div>
+                </div>
+                <h1 class="game-title">BRAINIACS</h1>
+                <p class="game-subtitle">The Ultimate Trivia App</p>
+                <p class="game-tagline">"In a world where knowledge is power..."</p>
+                <button id="start-btn" class="btn btn-primary btn-lg pulse-animation">
+                    START GAME
+                </button>
+                <div class="splash-footer">
+                    <p>Based on The Big Bang Theory</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Select Screen -->
+        <div id="level-select-screen" class="screen">
+            <div class="screen-header">
+                <h2>The Elevator is Broken!</h2>
+                <p class="subtitle">Complete all floors to fix it</p>
+                <div class="comic-books-display">
+                    <span class="comic-icon">&#x1F4D6;</span>
+                    <span id="total-comics" class="comic-count">0</span>
+                    <span class="comic-label">Comic Books</span>
+                </div>
+            </div>
+            <div class="elevator-shaft">
+                <div class="floor floor-4" data-level="4">
+                    <div class="floor-number">4</div>
+                    <div class="floor-info">
+                        <h3>The Roommate Agreement</h3>
+                        <p>Expert - Boss Level</p>
+                        <div class="floor-status">
+                            <span class="lock-icon" id="lock-4">&#x1F512;</span>
+                            <span class="score-display" id="score-4"></span>
+                        </div>
+                    </div>
+                    <div class="floor-decoration roof-decoration"></div>
+                </div>
+                <div class="floor floor-3" data-level="3">
+                    <div class="floor-number">3</div>
+                    <div class="floor-info">
+                        <h3>The Physics Bowl</h3>
+                        <p>Hard</p>
+                        <div class="floor-status">
+                            <span class="lock-icon" id="lock-3">&#x1F512;</span>
+                            <span class="score-display" id="score-3"></span>
+                        </div>
+                    </div>
+                    <div class="floor-decoration university-decoration"></div>
+                </div>
+                <div class="floor floor-2" data-level="2">
+                    <div class="floor-number">2</div>
+                    <div class="floor-info">
+                        <h3>The Comic Center</h3>
+                        <p>Medium</p>
+                        <div class="floor-status">
+                            <span class="lock-icon" id="lock-2">&#x1F512;</span>
+                            <span class="score-display" id="score-2"></span>
+                        </div>
+                    </div>
+                    <div class="floor-decoration apartment-decoration"></div>
+                </div>
+                <div class="floor floor-1 unlocked" data-level="1">
+                    <div class="floor-number">1</div>
+                    <div class="floor-info">
+                        <h3>The Cheesecake Factory</h3>
+                        <p>Easy</p>
+                        <div class="floor-status">
+                            <span class="lock-icon" id="lock-1" style="display:none">&#x1F512;</span>
+                            <span class="unlock-icon">&#x1F513;</span>
+                            <span class="score-display" id="score-1"></span>
+                        </div>
+                    </div>
+                    <div class="floor-decoration factory-decoration"></div>
+                </div>
+                <div class="elevator-car" id="elevator-car">
+                    <div class="elevator-doors">
+                        <div class="door door-left"></div>
+                        <div class="door door-right"></div>
+                    </div>
+                    <div class="out-of-order">OUT OF ORDER</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="game-header-top">
+                    <button id="back-btn" class="btn btn-small btn-back">&larr; Back</button>
+                    <div class="level-badge" id="level-badge">Level 1</div>
+                    <div class="comics-inline">
+                        <span class="comic-icon-sm">&#x1F4D6;</span>
+                        <span id="game-comics">0</span>
+                    </div>
+                </div>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Question</span>
+                        <span class="stat-value" id="question-counter">1/10</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Score</span>
+                        <span class="stat-value" id="current-score">0%</span>
+                    </div>
+                    <div class="stat-item strikes-display">
+                        <span class="stat-label">Strikes</span>
+                        <div class="strikes" id="strikes-container">
+                            <span class="strike">&#x26A0;</span>
+                            <span class="strike">&#x26A0;</span>
+                            <span class="strike">&#x26A0;</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timer-bar" id="timer-bar-container" style="display:none">
+                    <div class="timer-fill" id="timer-fill"></div>
+                </div>
+            </div>
+
+            <div class="question-area">
+                <div class="question-type-badge" id="question-type">Multiple Choice</div>
+                <div class="whiteboard">
+                    <div class="whiteboard-content">
+                        <p id="question-text" class="question-text">Loading question...</p>
+                    </div>
+                    <div class="whiteboard-marker"></div>
+                </div>
+                <div id="options-container" class="options-container">
+                    <!-- Options will be inserted here -->
+                </div>
+            </div>
+
+            <div class="hint-bar">
+                <button id="hint-penny" class="btn btn-hint" title="Eliminates 2 wrong answers">
+                    <span class="hint-icon">&#x1F4A1;</span>
+                    <span class="hint-name">Penny's Sense</span>
+                    <span class="hint-cost">(5 &#x1F4D6;)</span>
+                </button>
+                <button id="hint-howard" class="btn btn-hint" title="Adds extra time">
+                    <span class="hint-icon">&#x1F527;</span>
+                    <span class="hint-name">Howard's Fix</span>
+                    <span class="hint-cost">(3 &#x1F4D6;)</span>
+                </button>
+            </div>
+
+            <!-- Feedback overlay -->
+            <div id="feedback-overlay" class="feedback-overlay hidden">
+                <div class="feedback-content">
+                    <div class="feedback-icon" id="feedback-icon"></div>
+                    <p class="feedback-text" id="feedback-text"></p>
+                    <p class="feedback-detail" id="feedback-detail"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Complete Screen -->
+        <div id="level-complete-screen" class="screen">
+            <div class="level-complete-content">
+                <div class="result-icon" id="result-icon"></div>
+                <h2 id="result-title">Level Complete!</h2>
+                <p id="result-message"></p>
+                <div class="result-stats">
+                    <div class="result-stat">
+                        <span class="result-stat-value" id="result-score">0%</span>
+                        <span class="result-stat-label">Score</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-stat-value" id="result-correct">0/10</span>
+                        <span class="result-stat-label">Correct</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-stat-value" id="result-comics">+0</span>
+                        <span class="result-stat-label">Comic Books</span>
+                    </div>
+                </div>
+                <div class="result-achievements" id="result-achievements"></div>
+                <div class="result-buttons">
+                    <button id="retry-btn" class="btn btn-secondary">Try Again</button>
+                    <button id="next-level-btn" class="btn btn-primary" style="display:none">Next Level</button>
+                    <button id="back-to-levels-btn" class="btn btn-secondary">Level Select</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Victory Screen -->
+        <div id="victory-screen" class="screen">
+            <div class="victory-content">
+                <div class="confetti-container" id="confetti-container"></div>
+                <div class="elevator-fixed">
+                    <div class="elevator-victory">
+                        <div class="door door-left open"></div>
+                        <div class="door door-right open"></div>
+                        <div class="elevator-interior">
+                            <p>&#x2B06;</p>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="victory-title">BAZINGA!</h1>
+                <h2 class="victory-subtitle">You've Fixed the Elevator!</h2>
+                <p class="victory-message">You've mastered the trivia universe!</p>
+                <div class="diploma">
+                    <div class="diploma-inner">
+                        <p class="diploma-header">This certifies that</p>
+                        <p class="diploma-name">YOU</p>
+                        <p class="diploma-text">have been awarded the title of</p>
+                        <h3 class="diploma-title">Honorary Ph.D. in Television Comedy</h3>
+                        <p class="diploma-footer">Caltech Department of Theoretical Laughs</p>
+                    </div>
+                </div>
+                <button id="play-again-btn" class="btn btn-primary btn-lg">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/questions.js"></script>
+    <script src="js/sounds.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

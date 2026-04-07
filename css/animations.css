@@ -1,0 +1,162 @@
+/* ==========================================
+   Brainiacs Animations & Effects
+   ========================================== */
+
+/* ---------- Keyframes ---------- */
+
+@keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes pulse-animation {
+    0%, 100% { box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4); }
+    50% { box-shadow: 0 4px 30px rgba(255, 107, 53, 0.7); }
+}
+
+.pulse-animation {
+    animation: pulse-animation 2s ease infinite;
+}
+
+@keyframes correctPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+@keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+}
+
+.shake {
+    animation: shake 0.5s ease;
+}
+
+@keyframes feedbackIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in {
+    animation: slide-in 0.4s ease;
+}
+
+@keyframes pulse-bg {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes flash {
+    0%, 100% { background: rgba(255, 255, 255, 0.1); }
+    50% { background: rgba(255, 209, 102, 0.3); }
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+@keyframes victoryPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ---------- Screen Transitions ---------- */
+
+.screen {
+    animation: screenFadeIn 0.3s ease;
+}
+
+@keyframes screenFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ---------- Option Entrance ---------- */
+
+.btn-option {
+    animation: optionSlide 0.3s ease both;
+}
+
+.btn-option.option-0 { animation-delay: 0.05s; }
+.btn-option.option-1 { animation-delay: 0.1s; }
+.btn-option.option-2 { animation-delay: 0.15s; }
+.btn-option.option-3 { animation-delay: 0.2s; }
+
+@keyframes optionSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ---------- Floor Hover Effect ---------- */
+
+.floor.unlocked::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transition: left 0.5s ease;
+    pointer-events: none;
+}
+
+.floor.unlocked:hover::after {
+    left: 150%;
+}
+
+/* ---------- Whiteboard Doodles ---------- */
+
+.whiteboard::after {
+    content: 'E=mc\00B2';
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 0.65rem;
+    color: rgba(0, 0, 0, 0.1);
+    font-family: var(--font-body);
+    font-weight: 700;
+    pointer-events: none;
+}
