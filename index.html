@@ -22,6 +22,9 @@
                 <h1 class="game-title">BRAINIACS</h1>
                 <p class="game-subtitle">The Ultimate Trivia App</p>
                 <p class="game-tagline">"In a world where knowledge is power..."</p>
+                <div class="name-input-group">
+                    <input type="text" id="player-name-input" class="player-name-input" placeholder="Enter your name, genius..." maxlength="20" autocomplete="off">
+                </div>
                 <button id="start-btn" class="btn btn-primary btn-lg pulse-animation">
                     START GAME
                 </button>
@@ -41,6 +44,9 @@
                     <span id="total-comics" class="comic-count">0</span>
                     <span class="comic-label">Comic Books</span>
                 </div>
+            </div>
+            <div class="leaderboard-toggle">
+                <button id="leaderboard-btn" class="btn btn-secondary btn-small">Leaderboard</button>
             </div>
             <div class="elevator-shaft">
                 <div class="floor floor-4" data-level="4">
@@ -220,13 +226,33 @@
                 <div class="diploma">
                     <div class="diploma-inner">
                         <p class="diploma-header">This certifies that</p>
-                        <p class="diploma-name">YOU</p>
+                        <p class="diploma-name" id="diploma-player-name">YOU</p>
                         <p class="diploma-text">have been awarded the title of</p>
                         <h3 class="diploma-title">Honorary Ph.D. in Television Comedy</h3>
                         <p class="diploma-footer">Caltech Department of Theoretical Laughs</p>
                     </div>
                 </div>
+                <div class="share-buttons">
+                    <button id="share-whatsapp-btn" class="btn btn-share btn-whatsapp">Share on WhatsApp</button>
+                    <button id="share-twitter-btn" class="btn btn-share btn-twitter">Share on X</button>
+                    <button id="share-download-btn" class="btn btn-share btn-download">Download Certificate</button>
+                    <button id="share-native-btn" class="btn btn-share btn-native" style="display:none">Share</button>
+                </div>
                 <button id="play-again-btn" class="btn btn-primary btn-lg">Play Again</button>
+            </div>
+        </div>
+
+        <!-- Leaderboard Modal -->
+        <div id="leaderboard-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Leaderboard</h2>
+                    <button id="close-leaderboard" class="btn btn-small btn-back">&times;</button>
+                </div>
+                <div class="leaderboard-list" id="leaderboard-list">
+                    <p class="leaderboard-empty">No scores yet. Be the first!</p>
+                </div>
             </div>
         </div>
     </div>

@@ -61,11 +61,31 @@
     // Splash Screen
     // ==========================================
 
+    const playerNameInput = document.getElementById('player-name-input');
+
+    // Pre-fill name if returning player
+    if (game.state.playerName) {
+        playerNameInput.value = game.state.playerName;
+    }
+
     document.getElementById('start-btn').addEventListener('click', () => {
+        const name = playerNameInput.value.trim();
+        if (!name) {
+            playerNameInput.classList.add('shake');
+            playerNameInput.placeholder = "C'mon, even Sheldon has a name!";
+            setTimeout(() => playerNameInput.classList.remove('shake'), 500);
+            playerNameInput.focus();
+            return;
+        }
+        game.setPlayerName(name);
         soundManager.init();
         soundManager.playClick();
         showScreen('levelSelect');
         updateLevelSelect();
+    });
+
+    playerNameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') document.getElementById('start-btn').click();
     });
 
     // ==========================================
@@ -382,12 +402,26 @@
         els.retryBtn.style.display = 'inline-block';
         els.nextLevelBtn.style.display = result.passed && game.state.currentLevel < 4 ? 'inline-block' : 'none';
         els.backToLevelsBtn.style.display = 'inline-block';
+
+        // Update leaderboard after each level completion
+        game.addToLeaderboard();
     }
 
     function showVictoryScreen() {
         soundManager.playVictory();
         showScreen('victory');
         createConfetti();
+
+        // Set player name on diploma
+        document.getElementById('diploma-player-name').textContent = game.getPlayerName().toUpperCase();
+
+        // Add to leaderboard
+        game.addToLeaderboard();
+
+        // Show native share button if available
+        if (navigator.share) {
+            document.getElementById('share-native-btn').style.display = 'inline-block';
+        }
     }
 
     // ==========================================
@@ -543,6 +577,182 @@
         game.resetProgress();
         showScreen('levelSelect');
         updateLevelSelect();
+    });
+
+    // ==========================================
+    // Leaderboard
+    // ==========================================
+
+    const leaderboardModal = document.getElementById('leaderboard-modal');
+
+    document.getElementById('leaderboard-btn').addEventListener('click', () => {
+        soundManager.playClick();
+        renderLeaderboard();
+        leaderboardModal.classList.remove('hidden');
+    });
+
+    document.getElementById('close-leaderboard').addEventListener('click', () => {
+        leaderboardModal.classList.add('hidden');
+    });
+
+    leaderboardModal.querySelector('.modal-backdrop').addEventListener('click', () => {
+        leaderboardModal.classList.add('hidden');
+    });
+
+    function renderLeaderboard() {
+        const list = document.getElementById('leaderboard-list');
+        const entries = game.getLeaderboard();
+
+        if (entries.length === 0) {
+            list.innerHTML = '<p class="leaderboard-empty">No scores yet. Be the first!</p>';
+            return;
+        }
+
+        list.innerHTML = entries.map((entry, i) => {
+            const medal = i === 0 ? '&#x1F947;' : i === 1 ? '&#x1F948;' : i === 2 ? '&#x1F949;' : `#${i + 1}`;
+            const dateStr = new Date(entry.date).toLocaleDateString();
+            return `
+                <div class="leaderboard-entry ${i < 3 ? 'top-three' : ''}">
+                    <span class="lb-rank">${medal}</span>
+                    <div class="lb-info">
+                        <span class="lb-name">${escapeHtml(entry.name)}</span>
+                        <span class="lb-detail">${entry.levelsCompleted}/4 levels | ${dateStr}</span>
+                    </div>
+                    <div class="lb-score-col">
+                        <span class="lb-score">${entry.score}%</span>
+                        <span class="lb-comics">${entry.comicBooks} &#x1F4D6;</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // ==========================================
+    // Share Certificate
+    // ==========================================
+
+    function generateCertificateCanvas() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 800;
+        canvas.height = 500;
+        const ctx = canvas.getContext('2d');
+
+        // Background
+        const grad = ctx.createLinearGradient(0, 0, 800, 500);
+        grad.addColorStop(0, '#f5e6c8');
+        grad.addColorStop(1, '#e8d5a8');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 800, 500);
+
+        // Border
+        ctx.strokeStyle = '#c4a96a';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(20, 20, 760, 460);
+        ctx.strokeStyle = '#d4b97a';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(30, 30, 740, 440);
+
+        // Corner decorations
+        const corners = [[40, 40], [750, 40], [40, 450], [750, 450]];
+        corners.forEach(([x, y]) => {
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#c4a96a';
+            ctx.fill();
+        });
+
+        // Title
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#8b7355';
+        ctx.font = '16px serif';
+        ctx.fillText('BRAINIACS: THE ULTIMATE TRIVIA APP', 400, 80);
+
+        // Certifies
+        ctx.fillStyle = '#8b7355';
+        ctx.font = '18px serif';
+        ctx.fillText('This certifies that', 400, 140);
+
+        // Player name
+        ctx.fillStyle = '#2c1810';
+        ctx.font = 'bold 48px serif';
+        ctx.fillText(game.getPlayerName().toUpperCase(), 400, 200);
+
+        // Award text
+        ctx.fillStyle = '#8b7355';
+        ctx.font = '18px serif';
+        ctx.fillText('has been awarded the title of', 400, 250);
+
+        // Title
+        ctx.fillStyle = '#4a3520';
+        ctx.font = 'bold 28px serif';
+        ctx.fillText('Honorary Ph.D. in Television Comedy', 400, 300);
+
+        // Bazinga
+        ctx.fillStyle = '#ff6b35';
+        ctx.font = 'bold 22px serif';
+        ctx.fillText('Bazinga! You\'ve mastered the trivia universe!', 400, 350);
+
+        // Footer
+        ctx.fillStyle = '#a08060';
+        ctx.font = 'italic 14px serif';
+        ctx.fillText('Caltech Department of Theoretical Laughs', 400, 410);
+
+        // Score
+        ctx.fillStyle = '#8b7355';
+        ctx.font = '14px serif';
+        ctx.fillText(`Total Score: ${game.getTotalScore()}% | Comic Books: ${game.state.comicBooks}`, 400, 440);
+
+        return canvas;
+    }
+
+    function getShareText() {
+        return `Bazinga! I just earned an Honorary Ph.D. in Television Comedy from Brainiacs! Score: ${game.getTotalScore()}% | Can you beat me?`;
+    }
+
+    document.getElementById('share-whatsapp-btn').addEventListener('click', () => {
+        const text = encodeURIComponent(getShareText());
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    });
+
+    document.getElementById('share-twitter-btn').addEventListener('click', () => {
+        const text = encodeURIComponent(getShareText());
+        window.open(`https://x.com/intent/tweet?text=${text}`, '_blank');
+    });
+
+    document.getElementById('share-download-btn').addEventListener('click', () => {
+        const canvas = generateCertificateCanvas();
+        const link = document.createElement('a');
+        link.download = `brainiacs-certificate-${game.getPlayerName()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+
+    document.getElementById('share-native-btn').addEventListener('click', async () => {
+        const canvas = generateCertificateCanvas();
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], 'brainiacs-certificate.png', { type: 'image/png' });
+            try {
+                await navigator.share({
+                    title: 'Brainiacs Certificate',
+                    text: getShareText(),
+                    files: [file]
+                });
+            } catch (e) {
+                // User cancelled or share failed, fall back to download
+                if (e.name !== 'AbortError') {
+                    const link = document.createElement('a');
+                    link.download = 'brainiacs-certificate.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }
+            }
+        }, 'image/png');
     });
 
     // ==========================================

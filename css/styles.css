@@ -182,6 +182,38 @@ body {
     margin-top: -8px;
 }
 
+/* Name Input */
+.name-input-group {
+    width: 100%;
+    max-width: 300px;
+}
+
+.player-name-input {
+    width: 100%;
+    padding: 14px 20px;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.player-name-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+.player-name-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(255, 209, 102, 0.2);
+}
+
 .splash-footer {
     margin-top: 30px;
     color: var(--text-muted);
@@ -256,6 +288,11 @@ body {
 #level-select-screen {
     background: linear-gradient(180deg, var(--bg-dark), var(--bg-medium));
     padding: 20px;
+}
+
+.leaderboard-toggle {
+    text-align: center;
+    margin-bottom: -5px;
 }
 
 .screen-header {
@@ -1091,6 +1128,191 @@ body {
     font-size: 0.8rem;
     color: var(--text-secondary);
     margin: 0;
+}
+
+/* ==========================================
+   LEADERBOARD MODAL
+   ========================================== */
+
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    position: relative;
+    background: var(--bg-medium);
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+    animation: feedbackIn 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.leaderboard-empty {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 30px 0;
+    font-style: italic;
+}
+
+.leaderboard-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--card-border);
+}
+
+.leaderboard-entry.top-three {
+    border-color: rgba(255, 209, 102, 0.3);
+}
+
+.lb-rank {
+    font-size: 1.3rem;
+    width: 36px;
+    text-align: center;
+    flex-shrink: 0;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.lb-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.lb-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lb-detail {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.lb-score-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+}
+
+.lb-score {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--success);
+}
+
+.lb-comics {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================
+   SHARE BUTTONS
+   ========================================== */
+
+.share-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.btn-share {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    border-radius: var(--radius);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.btn-whatsapp {
+    background: #25d366;
+    color: white;
+}
+
+.btn-whatsapp:hover {
+    background: #1da851;
+}
+
+.btn-twitter {
+    background: #1d9bf0;
+    color: white;
+}
+
+.btn-twitter:hover {
+    background: #1a8cd8;
+}
+
+.btn-download {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 2px solid var(--card-border);
+}
+
+.btn-download:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-native {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #1a1a2e;
 }
 
 /* ==========================================

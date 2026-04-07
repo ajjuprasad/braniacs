@@ -65,6 +65,7 @@ const ACHIEVEMENTS = {
 class Game {
     constructor() {
         this.state = {
+            playerName: '',
             currentLevel: null,
             questions: [],
             currentQuestionIndex: 0,
@@ -90,6 +91,7 @@ class Game {
      */
     saveState() {
         const saveData = {
+            playerName: this.state.playerName,
             comicBooks: this.state.comicBooks,
             levelsCompleted: this.state.levelsCompleted,
             levelScores: this.state.levelScores,
@@ -105,11 +107,27 @@ class Game {
         const saved = localStorage.getItem('brainiacs_save');
         if (saved) {
             const data = JSON.parse(saved);
+            this.state.playerName = data.playerName || '';
             this.state.comicBooks = data.comicBooks || 0;
             this.state.levelsCompleted = data.levelsCompleted || {};
             this.state.levelScores = data.levelScores || {};
             this.state.achievements = data.achievements || [];
         }
+    }
+
+    /**
+     * Set player name
+     */
+    setPlayerName(name) {
+        this.state.playerName = name;
+        this.saveState();
+    }
+
+    /**
+     * Get player name
+     */
+    getPlayerName() {
+        return this.state.playerName || 'Anonymous';
     }
 
     /**
@@ -376,5 +394,43 @@ class Game {
             case 'whosaidit': return 'Who Said It?';
             default: return 'Trivia';
         }
+    }
+
+    /**
+     * Get total score across all levels
+     */
+    getTotalScore() {
+        let total = 0;
+        for (const level in this.state.levelScores) {
+            total += this.state.levelScores[level];
+        }
+        return total;
+    }
+
+    /**
+     * Add entry to leaderboard
+     */
+    addToLeaderboard() {
+        const leaderboard = this.getLeaderboard();
+        const entry = {
+            name: this.getPlayerName(),
+            score: this.getTotalScore(),
+            comicBooks: this.state.comicBooks,
+            levelsCompleted: Object.keys(this.state.levelsCompleted).length,
+            date: new Date().toISOString()
+        };
+        leaderboard.push(entry);
+        leaderboard.sort((a, b) => b.score - a.score || b.comicBooks - a.comicBooks);
+        const top10 = leaderboard.slice(0, 10);
+        localStorage.setItem('brainiacs_leaderboard', JSON.stringify(top10));
+        return top10;
+    }
+
+    /**
+     * Get leaderboard
+     */
+    getLeaderboard() {
+        const saved = localStorage.getItem('brainiacs_leaderboard');
+        return saved ? JSON.parse(saved) : [];
     }
 }
