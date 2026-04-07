@@ -712,12 +712,38 @@
     }
 
     function getShareText() {
-        return `Bazinga! I just earned an Honorary Ph.D. in Television Comedy from Brainiacs! Score: ${game.getTotalScore()}% | Can you beat me?`;
+        return `Bazinga! I just earned an Honorary Ph.D. in Television Comedy from Brainiacs! Score: ${game.getTotalScore()}% | Can you beat me? https://ajjuprasad.github.io/braniacs/`;
     }
 
     document.getElementById('share-whatsapp-btn').addEventListener('click', () => {
-        const text = encodeURIComponent(getShareText());
-        window.open(`https://wa.me/?text=${text}`, '_blank');
+        // Use native share with image if available (mobile), otherwise text-only link
+        if (navigator.share && navigator.canShare) {
+            const canvas = generateCertificateCanvas();
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], 'brainiacs-certificate.png', { type: 'image/png' });
+                const shareData = {
+                    text: getShareText(),
+                    files: [file]
+                };
+                try {
+                    if (navigator.canShare(shareData)) {
+                        await navigator.share(shareData);
+                    } else {
+                        // Files not supported, share text only
+                        const text = encodeURIComponent(getShareText());
+                        window.open(`https://wa.me/?text=${text}`, '_blank');
+                    }
+                } catch (e) {
+                    if (e.name !== 'AbortError') {
+                        const text = encodeURIComponent(getShareText());
+                        window.open(`https://wa.me/?text=${text}`, '_blank');
+                    }
+                }
+            }, 'image/png');
+        } else {
+            const text = encodeURIComponent(getShareText());
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
     });
 
     document.getElementById('share-twitter-btn').addEventListener('click', () => {
